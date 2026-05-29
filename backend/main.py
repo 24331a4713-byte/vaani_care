@@ -18,12 +18,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://vaani-care-4.onrender.com",
-        "https://vaani-care-pallavidondapati.onrender.com",
-        "https://vaani-care-2.onrender.com",
-    ],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
