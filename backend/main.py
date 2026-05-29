@@ -20,9 +20,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://vaani-care-2.onrender.com",
-        "https://vaani-care-frontend.onrender.com",
-        "*"
+        "https://vaani-care-4.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
