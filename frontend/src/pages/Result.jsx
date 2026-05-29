@@ -1,12 +1,19 @@
-import React, { useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
-  AlertTriangle, CheckCircle, Phone, MapPin,
-  Volume2, ArrowLeft, Activity, Mic, ShieldCheck
-} from 'lucide-react';
-import axios from 'axios';
+  AlertTriangle,
+  CheckCircle,
+  Phone,
+  MapPin,
+  Volume2,
+  ArrowLeft,
+  Activity,
+  Mic,
+  ShieldCheck,
+} from "lucide-react";
+import axios from "axios";
 
-const API = "http://127.0.0.1:8000/api";
+const API = "https://vaani-care-2.onrender.com/api";
 
 const SEVERITY_CONFIG = {
   low: {
@@ -54,32 +61,35 @@ export default function Result() {
   const [playing, setPlaying] = useState(false);
   const data = state?.data;
 
-  if (!data) { navigate("/"); return null; }
+  if (!data) {
+    navigate("/");
+    return null;
+  }
 
   const sev = SEVERITY_CONFIG[data.severity] || SEVERITY_CONFIG.moderate;
 
- const playResponse = async () => {
+  const playResponse = async () => {
     try {
-        setPlaying(true);
-        const res = await axios.post(
-            `${API}/text-to-speech`,
-            { text: data.response, language: data.language },
-            { responseType: "blob" }  // ✅ must be blob
-        );
-        const blob = new Blob([res.data], { type: "audio/mpeg" });  // ✅ explicit type
-        const url = URL.createObjectURL(blob);
-        if (audioRef.current) {
-            audioRef.current.src = url;
-            audioRef.current.load();     // ✅ force reload
-            audioRef.current.play();
-            audioRef.current.onended = () => setPlaying(false);
-        }
+      setPlaying(true);
+      const res = await axios.post(
+        `${API}/text-to-speech`,
+        { text: data.response, language: data.language },
+        { responseType: "blob" }, // ✅ must be blob
+      );
+      const blob = new Blob([res.data], { type: "audio/mpeg" }); // ✅ explicit type
+      const url = URL.createObjectURL(blob);
+      if (audioRef.current) {
+        audioRef.current.src = url;
+        audioRef.current.load(); // ✅ force reload
+        audioRef.current.play();
+        audioRef.current.onended = () => setPlaying(false);
+      }
     } catch (err) {
-        setPlaying(false);
-        console.error("TTS error:", err);
-        alert("Could not play audio. Check internet connection.");
+      setPlaying(false);
+      console.error("TTS error:", err);
+      alert("Could not play audio. Check internet connection.");
     }
-};
+  };
 
   return (
     <div style={styles.container}>
@@ -113,7 +123,10 @@ export default function Result() {
       )}
 
       {/* Severity Header Card */}
-      <div style={{ ...styles.severityCard, background: sev.gradient }} className="animate-fadeUp">
+      <div
+        style={{ ...styles.severityCard, background: sev.gradient }}
+        className="animate-fadeUp"
+      >
         <div style={styles.severityTop}>
           <span style={{ ...styles.severityBadge, ...sev.badge }}>
             {sev.emoji} {sev.label}
@@ -124,9 +137,7 @@ export default function Result() {
         </div>
         <p style={styles.transcriptLabel}>You said:</p>
         <p style={styles.transcriptText}>"{data.transcript}"</p>
-        <div style={styles.langBadge}>
-          🌐 {data.language?.toUpperCase()}
-        </div>
+        <div style={styles.langBadge}>🌐 {data.language?.toUpperCase()}</div>
       </div>
 
       {/* Symptoms */}
@@ -138,7 +149,9 @@ export default function Result() {
           </div>
           <div style={styles.symptomRow}>
             {data.symptoms.map((s, i) => (
-              <span key={i} style={styles.symptomTag}>{s}</span>
+              <span key={i} style={styles.symptomTag}>
+                {s}
+              </span>
             ))}
           </div>
           {data.duration && (
@@ -152,7 +165,11 @@ export default function Result() {
         <div style={styles.cardHeader}>
           <Activity size={18} color="#0d9488" />
           <h3 style={styles.cardTitle}>Health Guidance</h3>
-          <button onClick={playResponse} style={styles.listenBtn} disabled={playing}>
+          <button
+            onClick={playResponse}
+            style={styles.listenBtn}
+            disabled={playing}
+          >
             <Volume2 size={14} />
             {playing ? "Playing..." : "Listen"}
           </button>
@@ -179,7 +196,12 @@ export default function Result() {
                   </p>
                   {f.phone && <p style={styles.facilityPhone}>📞 {f.phone}</p>}
                 </div>
-                <a href={f.google_maps} target="_blank" rel="noreferrer" style={styles.mapsBtn}>
+                <a
+                  href={f.google_maps}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={styles.mapsBtn}
+                >
                   Maps →
                 </a>
               </div>
@@ -190,7 +212,8 @@ export default function Result() {
 
       {/* Disclaimer */}
       <p style={styles.disclaimer}>
-        VaaniCare does not replace professional medical advice. Always consult a qualified doctor.
+        VaaniCare does not replace professional medical advice. Always consult a
+        qualified doctor.
       </p>
     </div>
   );
@@ -208,135 +231,230 @@ const styles = {
     position: "relative",
   },
   blob1: {
-    position: "fixed", top: -100, right: -100,
-    width: 300, height: 300, borderRadius: "50%",
+    position: "fixed",
+    top: -100,
+    right: -100,
+    width: 300,
+    height: 300,
+    borderRadius: "50%",
     background: "radial-gradient(circle, #bbf7d0 0%, transparent 70%)",
-    zIndex: 0, pointerEvents: "none",
+    zIndex: 0,
+    pointerEvents: "none",
   },
   blob2: {
-    position: "fixed", bottom: -80, left: -80,
-    width: 280, height: 280, borderRadius: "50%",
+    position: "fixed",
+    bottom: -80,
+    left: -80,
+    width: 280,
+    height: 280,
+    borderRadius: "50%",
     background: "radial-gradient(circle, #ccfbf1 0%, transparent 70%)",
-    zIndex: 0, pointerEvents: "none",
+    zIndex: 0,
+    pointerEvents: "none",
   },
   topBar: {
-    width: "100%", display: "flex", alignItems: "center",
-    justifyContent: "space-between", padding: "16px 20px",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "16px 20px",
     zIndex: 1,
   },
   backBtn: {
-    display: "flex", alignItems: "center", gap: 4,
-    background: "none", border: "none", cursor: "pointer",
-    color: "#6b7280", fontSize: 13, fontFamily: "Sora, sans-serif",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    color: "#6b7280",
+    fontSize: 13,
+    fontFamily: "Sora, sans-serif",
   },
   logoSmall: { display: "flex", alignItems: "center", gap: 6 },
   logoSmallText: { fontWeight: 700, color: "#14532d", fontSize: 16 },
   newBtn: {
-    display: "flex", alignItems: "center", gap: 4,
-    background: "#f0fdf4", border: "1px solid #bbf7d0",
-    borderRadius: 20, padding: "6px 12px", cursor: "pointer",
-    color: "#16a34a", fontSize: 12, fontFamily: "Sora, sans-serif",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    background: "#f0fdf4",
+    border: "1px solid #bbf7d0",
+    borderRadius: 20,
+    padding: "6px 12px",
+    cursor: "pointer",
+    color: "#16a34a",
+    fontSize: 12,
+    fontFamily: "Sora, sans-serif",
   },
   emergencyBanner: {
-    width: "calc(100% - 32px)", margin: "0 16px 16px",
+    width: "calc(100% - 32px)",
+    margin: "0 16px 16px",
     background: "linear-gradient(135deg, #dc2626, #991b1b)",
-    borderRadius: 20, padding: "16px 20px",
-    display: "flex", alignItems: "center", justifyContent: "space-between",
-    zIndex: 1, boxShadow: "0 4px 20px rgba(220,38,38,0.4)",
+    borderRadius: 20,
+    padding: "16px 20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    zIndex: 1,
+    boxShadow: "0 4px 20px rgba(220,38,38,0.4)",
   },
   emergencyTitle: { color: "white", fontWeight: 700, fontSize: 16 },
-  emergencySubtitle: { color: "rgba(255,255,255,0.8)", fontSize: 12, marginTop: 2 },
+  emergencySubtitle: {
+    color: "rgba(255,255,255,0.8)",
+    fontSize: 12,
+    marginTop: 2,
+  },
   callBtn: {
-    display: "flex", alignItems: "center", gap: 6,
-    background: "white", color: "#dc2626",
-    padding: "10px 16px", borderRadius: 12,
-    fontWeight: 700, fontSize: 14, textDecoration: "none",
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    background: "white",
+    color: "#dc2626",
+    padding: "10px 16px",
+    borderRadius: 12,
+    fontWeight: 700,
+    fontSize: 14,
+    textDecoration: "none",
   },
   severityCard: {
-    width: "calc(100% - 32px)", margin: "0 16px 16px",
-    borderRadius: 24, padding: "24px",
-    zIndex: 1, boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
+    width: "calc(100% - 32px)",
+    margin: "0 16px 16px",
+    borderRadius: 24,
+    padding: "24px",
+    zIndex: 1,
+    boxShadow: "0 8px 32px rgba(0,0,0,0.15)",
   },
   severityTop: {
-    display: "flex", alignItems: "center",
-    justifyContent: "space-between", marginBottom: 16,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 16,
   },
   severityBadge: {
-    padding: "6px 14px", borderRadius: 20,
-    fontSize: 13, fontWeight: 700,
+    padding: "6px 14px",
+    borderRadius: 20,
+    fontSize: 13,
+    fontWeight: 700,
   },
   confidenceText: { color: "rgba(255,255,255,0.7)", fontSize: 12 },
-  transcriptLabel: { color: "rgba(255,255,255,0.7)", fontSize: 12, marginBottom: 4 },
+  transcriptLabel: {
+    color: "rgba(255,255,255,0.7)",
+    fontSize: 12,
+    marginBottom: 4,
+  },
   transcriptText: {
-    color: "white", fontSize: 16, fontWeight: 500,
-    fontStyle: "italic", lineHeight: 1.5,
+    color: "white",
+    fontSize: 16,
+    fontWeight: 500,
+    fontStyle: "italic",
+    lineHeight: 1.5,
   },
   langBadge: {
-    marginTop: 12, display: "inline-block",
+    marginTop: 12,
+    display: "inline-block",
     background: "rgba(255,255,255,0.15)",
-    color: "white", padding: "4px 10px",
-    borderRadius: 10, fontSize: 11,
+    color: "white",
+    padding: "4px 10px",
+    borderRadius: 10,
+    fontSize: 11,
   },
   card: {
-    width: "calc(100% - 32px)", margin: "0 16px 16px",
-    background: "white", borderRadius: 20,
-    padding: "20px", zIndex: 1,
+    width: "calc(100% - 32px)",
+    margin: "0 16px 16px",
+    background: "white",
+    borderRadius: 20,
+    padding: "20px",
+    zIndex: 1,
     boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
     border: "1px solid #f3f4f6",
   },
   cardHeader: {
-    display: "flex", alignItems: "center",
-    gap: 8, marginBottom: 14,
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 14,
   },
   cardTitle: { fontSize: 15, fontWeight: 600, color: "#1f2937", flex: 1 },
   listenBtn: {
-    display: "flex", alignItems: "center", gap: 4,
-    background: "#f0fdf4", border: "1px solid #bbf7d0",
-    color: "#16a34a", padding: "6px 12px",
-    borderRadius: 20, cursor: "pointer",
-    fontSize: 12, fontFamily: "Sora, sans-serif",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+    background: "#f0fdf4",
+    border: "1px solid #bbf7d0",
+    color: "#16a34a",
+    padding: "6px 12px",
+    borderRadius: 20,
+    cursor: "pointer",
+    fontSize: 12,
+    fontFamily: "Sora, sans-serif",
   },
   symptomRow: { display: "flex", flexWrap: "wrap", gap: 8 },
   symptomTag: {
-    background: "#eff6ff", color: "#1d4ed8",
-    padding: "6px 14px", borderRadius: 20,
-    fontSize: 13, fontWeight: 500, textTransform: "capitalize",
+    background: "#eff6ff",
+    color: "#1d4ed8",
+    padding: "6px 14px",
+    borderRadius: 20,
+    fontSize: 13,
+    fontWeight: 500,
+    textTransform: "capitalize",
   },
   durationText: { color: "#6b7280", fontSize: 13, marginTop: 10 },
   responseText: {
-    color: "#374151", fontSize: 15,
-    lineHeight: 1.7, fontWeight: 400,
+    color: "#374151",
+    fontSize: 15,
+    lineHeight: 1.7,
+    fontWeight: 400,
   },
   facilityList: { display: "flex", flexDirection: "column", gap: 12 },
   facilityItem: {
-    display: "flex", alignItems: "center", gap: 12,
-    padding: "12px", borderRadius: 14,
-    background: "#f9fafb", border: "1px solid #f3f4f6",
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+    padding: "12px",
+    borderRadius: 14,
+    background: "#f9fafb",
+    border: "1px solid #f3f4f6",
   },
   facilityIcon: {
-    width: 32, height: 32, borderRadius: 10,
+    width: 32,
+    height: 32,
+    borderRadius: 10,
     background: "linear-gradient(135deg, #16a34a, #0d9488)",
-    color: "white", display: "flex",
-    alignItems: "center", justifyContent: "center",
-    fontWeight: 700, fontSize: 14, flexShrink: 0,
+    color: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: 700,
+    fontSize: 14,
+    flexShrink: 0,
   },
   facilityInfo: { flex: 1, minWidth: 0 },
   facilityName: {
-    fontWeight: 600, fontSize: 14,
-    color: "#1f2937", whiteSpace: "nowrap",
-    overflow: "hidden", textOverflow: "ellipsis",
+    fontWeight: 600,
+    fontSize: 14,
+    color: "#1f2937",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
   facilityMeta: { fontSize: 12, color: "#6b7280", marginTop: 2 },
   facilityPhone: { fontSize: 12, color: "#16a34a", marginTop: 2 },
   mapsBtn: {
-    background: "#eff6ff", color: "#1d4ed8",
-    padding: "6px 10px", borderRadius: 10,
-    fontSize: 12, fontWeight: 500,
-    textDecoration: "none", whiteSpace: "nowrap",
+    background: "#eff6ff",
+    color: "#1d4ed8",
+    padding: "6px 10px",
+    borderRadius: 10,
+    fontSize: 12,
+    fontWeight: 500,
+    textDecoration: "none",
+    whiteSpace: "nowrap",
   },
   disclaimer: {
-    fontSize: 11, color: "#9ca3af",
-    textAlign: "center", padding: "0 32px",
-    marginTop: 8, zIndex: 1,
+    fontSize: 11,
+    color: "#9ca3af",
+    textAlign: "center",
+    padding: "0 32px",
+    marginTop: 8,
+    zIndex: 1,
   },
 };
