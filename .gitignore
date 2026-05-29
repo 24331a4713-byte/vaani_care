@@ -1,0 +1,53 @@
+# ======================
+# Python
+# ======================
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# backend cache
+backend/**/__pycache__/
+
+# ======================
+# Environment files
+# ======================
+.env
+backend/.env
+frontend/.env
+
+# ======================
+# Node
+# ======================
+node_modules/
+frontend/node_modules/
+frontend/build/
+
+# ======================
+# OS files
+# ======================
+.DS_Store
+
+# ======================
+# ML / Models (large files)
+# ======================
+*.safetensors
+*.bin
+*.pt
+*.pth
+backend/ml/triage_model/
+
+# ======================
+# Audio files (if not needed in repo)
+# ======================
+*.wav
+*.mp3
+
+# ======================
+# Jupyter
+# ======================
+.ipynb_checkpoints/
