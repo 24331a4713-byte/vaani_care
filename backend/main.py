@@ -21,6 +21,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "https://vaani-care-4.onrender.com",
+        "https://vaani-care-pallavidondapati.onrender.com",
+        "https://vaani-care-2.onrender.com",
     ],
     allow_credentials=True,
     allow_methods=["*"],
