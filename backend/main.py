@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from backend.api.speech import router as speech_router
 from backend.api.symptom import router as symptom_router
 from backend.api.triage import router as triage_router
@@ -7,21 +8,27 @@ from backend.api.response import router as response_router
 from backend.api.tts import router as tts_router
 from backend.api.facility import router as facility_router
 from backend.api.vaanicare import router as vaanicare_router
+from backend.api.photo import router as photo_router
 
 app = FastAPI(
     title="VaaniCare API",
     description="Multilingual voice ai health assistant",
     version="1.0"
 )
-from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://vaani-care-2.onrender.com",
+        "https://vaani-care-frontend.onrender.com",
+        "*"
+    ],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-from backend.api.photo import router as photo_router
+
 app.include_router(photo_router, prefix="/api")
 app.include_router(speech_router, prefix="/api")
 app.include_router(symptom_router, prefix="/api")
